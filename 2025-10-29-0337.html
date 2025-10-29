@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>សំបុត្រអញ្ជើញមង្គលការ</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--
+    ========================================================
+    DEVELOPER CUSTOMIZATION CONFIGURATION (START)
+    ========================================================
+    -->
+    <script>
+        /**
+         * វត្ថុ CONFIG នេះមានការកំណត់ទាំងអស់ដែលត្រូវប្ដូរតាមបំណង។
+         * អ្នកអភិវឌ្ឍន៍គួរតែកែសម្រួលតែវត្ថុនេះប៉ុណ្ណោះ។
+         */
+        const CONFIG = {
+            // 1. Core Data
+            // Format: 'YYYY-MM-DDT HH:MM:SS'. Example: '2026-11-09T11:00:00'
+            weddingDate: '2026-11-09T11:00:00', 
+            
+            // 2. Image URLs
+            // Cover photo URL (The main full-screen image)
+            coverPhotoUrl: 'https://raw.githubusercontent.com/lachvanett-star/Gif-no-background/5e3d2615281fb5e8e8833f277dcefbcb46af886a/Light%20Pink%20Violet%20Watercolor%20Flowers%20and%20Butterflies%20Personal%20Greetings%20Postcard%20(1).png', 
+            // Main page background URL (Appears after opening the invitation)
+            mainBackgroundUrl: 'https://raw.githubusercontent.com/lachvanett-star/Gif-no-background/5e3d2615281fb5e8e8833f277dcefbcb46af886a/Light%20Pink%20Violet%20Watercolor%20Flowers%20and%20Butterflies%20Personal%20Greetings%20Postcard%20(1).png',
+            
+            // 3. Action Links
+            contactLink: 'https://t.me/yourtelegram_link_here', // Link for the "ទំនាក់ទំនង" button
+            
+            // 4. Gallery Photo Data (Layout is handled by the 'col-span-X' class)
+            gallery: [
+                // { url: 'image_link', layout: 'col-span-2' } takes up the full width
+                // { url: 'image_link', layout: 'col-span-1' } takes up half the width
+                { url: 'https://raw.githubusercontent.com/lachvanett-star/Gif-no-background/5e3d2615281fb5e8e8833f277dcefbcb46af886a/Light%20Pink%20Violet%20Watercolor%20Flowers%20and%20Butterflies%20Personal%20Greetings%20Postcard%20(1).png', layout: 'col-span-2' },
+                { url: 'https://raw.githubusercontent.com/lachvanett-star/Gif-no-background/5e3d2615281fb5e8e8833f277dcefbcb46af886a/Light%20Pink%20Violet%20Watercolor%20Flowers%20and%20Butterflies%20Personal%20Greetings%20Postcard%20(1).png', layout: 'col-span-1' },
+                { url: 'https://placehold.co/300x400/48bb78/ffffff?text=Sweet+Moment+Photo+3', layout: 'col-span-1' },
+                { url: 'https://placehold.co/600x300/f6ad55/ffffff?text=Family+Photo+4', layout: 'col-span-2' },
+                { url: 'https://placehold.co/300x300/f687b3/ffffff?text=Travel+Photo+5', layout: 'col-span-1' },
+                { url: 'https://placehold.co/300x300/68d391/ffffff?text=More+Memories', layout: 'col-span-1' },
+            ]
+        };
+
+        // This script injects image URLs into CSS variables so the style sheet can use them.
+        document.addEventListener('DOMContentLoaded', () => {
+            const root = document.documentElement.style;
+            root.setProperty('--cover-photo-url', `url('${CONFIG.coverPhotoUrl}')`);
+            root.setProperty('--main-bg-image', `url('${CONFIG.mainBackgroundUrl}')`);
+        });
+    </script>
+    <!--
+    ========================================================
+    DEVELOPER CUSTOMIZATION CONFIGURATION (END)
+    ========================================================
+    -->
+    
+    <style>
+        /* 1. FONT LOADING: Moulpali Font */
+        /* Note: Using raw GitHub links for fonts may fail due to CORS or security policies. 
+           Consider hosting the font file directly on Google Sites or a dedicated host. */
+        @font-face {
+            font-family: 'Moulpali';
+            src: url('https://raw.githubusercontent.com/lachvanett-star/Gif-no-background/b60f9efa07e7c15f288b7b2a9241a9dbd26b2395/Moulpali.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            /* CSS variables for images are now set by the JS CONFIG object */
+            --khmer-font: 'Moulpali', 'Khmer OS Siemreap', sans-serif; 
+            --glass-color: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            font-family: var(--khmer-font);
+            background-image: var(--main-bg-image); /* Uses variable set by JS */
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            line-height: 1.8;
+            color: #1a202c;
+            overflow-x: hidden;
+            font-size: 16px; 
+        }
+        @media (max-width: 768px) {
+            body { font-size: 14px; }
+        }
+
+        body.locked { overflow: hidden; }
+        .main-content { display: none; }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background-color: var(--glass-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease-out;
+        }
+
+        /* --- Cover Page Styles (Single Photo) --- */
+        #cover-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: var(--cover-photo-url); /* Uses variable set by JS */
+            background-size: cover;
+            background-position: center;
+            z-index: 1000;
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            overflow: hidden;
+        }
+
+        #cover-page.hidden {
+            opacity: 0;
+            transform: translateY(-100%);
+            pointer-events: none;
+        }
+
+        .A4-container {
+            width: 210mm;
+            height: 297mm;
+            max-width: 90vw;
+            max-height: 90vh;
+            background-color: rgba(255, 255, 255, 0.85); 
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .A4-container {
+                width: 95vw;
+                height: 95vh;
+                padding: 1rem;
+                border-radius: 0.5rem;
+            }
+        }
+
+        .open-button {
+            background-color: #ef4444;
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Action Buttons Layout */
+        .grid-action-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr)); 
+            gap: 0.5rem; 
+        }
+        @media (min-width: 640px) {
+            .grid-action-buttons {
+                gap: 1rem; 
+            }
+        }
+        
+        .glass-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90px; 
+            min-height: 70px;
+            background-color: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 1rem; 
+            padding: 0.5rem;
+            font-weight: bold;
+            text-align: center;
+            color: #1a202c;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            font-size: 0.8rem;
+        }
+
+        .glass-btn:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .glass-btn span {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .fade-in-up { opacity: 0; transform: translateY(20px); }
+        .fade-in-up.active { opacity: 1; transform: translateY(0); }
+        .photo-section {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="locked selection:bg-pink-300 selection:text-white">
+    
+    <!-- COVER PAGE -->
+    <div id="cover-page">
+        <div class="A4-container glass-card p-8 md:p-12">
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-6 md:mb-10 text-pink-700 leading-tight">
+                សំបុត្រអញ្ជើញមង្គលការ
+            </h1>
+            
+            <!-- Guest Name Display Box -->
+            <div id="guest-name-box" class="glass-card mb-12 p-6 max-w-sm w-full mx-auto text-center border-2 border-white/70">
+                <p class="text-xl text-gray-800 mb-2">សូមគោរពអញ្ជើញ</p>
+                <!-- Content set by JavaScript based on URL -->
+                <h2 id="guest-name-display" class="text-3xl md:text-4xl font-extrabold text-pink-900 drop-shadow-md">
+                    លោក-លោកស្រី
+                </h2>
+            </div>
+            
+            <button id="open-invitation-btn" class="open-button">
+                <span class="mr-2">💌</span> បើកសំបុត្រអញ្ជើញ
+            </button>
+
+            <p class="absolute bottom-4 text-sm text-gray-600/80">
+                សូមចុចប៊ូតុងខាងលើដើម្បីចូលរួមអានព័ត៌មានលម្អិត
+            </p>
+        </div>
+    </div>
+
+    
+    <!-- MAIN CONTENT SECTION -->
+    <div class="main-content mx-auto max-w-4xl p-4 md:p-8">
+
+        
+        <section id="invitation" class="my-16 md:my-24 p-8 glass-card fade-in-up">
+            <div class="text-center">
+                <p class="text-xl md:text-2xl mb-4 text-pink-700">សូមគោរពអញ្ជើញ</p>
+                <h1 class="text-3xl md:text-5xl font-extrabold mb-8 text-pink-900 leading-snug">
+                    ព្រះអង្គម្ចាស់ព្រះគ្រឿង / លោក-លោកស្រី / អ្នកទាំងអស់គ្នា
+                </h1>
+                <p class="text-xl md:text-2xl text-pink-800">
+                    ដើម្បីចូលរួមអបអរសាទរពិធីអាពាហ៍ពិពាហ៍
+                </p>
+            </div>
+        </section>
+
+        
+        <section id="couple-details" class="my-16 md:my-24 text-center p-8 glass-card fade-in-up">
+            <!-- Content not changed, but feel free to update the names here -->
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 text-pink-800">
+                លោក ម៉េង ហួរ
+                <span class="text-lg font-normal block mt-2 text-gray-700">(កូនប្រុសរបស់ លោក សុខ រដ្ឋា និង អ្នកស្រី អាន ម៉ាលី)</span>
+            </h2>
+            <p class="text-5xl font-extrabold text-pink-700 my-4">និង</p>
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-pink-800">
+                អ្នកស្រី ចាន់ ធីតា
+                <span class="text-lg font-normal block mt-2 text-gray-700">(កូនស្រីរបស់ លោក សួន វិបុល និង អ្នកស្រី លី ហេង)</span>
+            </h2>
+
+            <div class="mt-10 pt-4 pb-6 px-4 glass-card max-w-md mx-auto">
+                <p class="text-2xl font-bold mb-4 text-pink-800">ពិធីនឹងប្រព្រឹត្តទៅក្នុងរយៈពេល៖</p>
+                <div id="countdown" class="flex justify-center space-x-2 md:space-x-4 text-center">
+                    <!-- Countdown units generated by JS -->
+                </div>
+            </div>
+        </section>
+        
+        
+        <section id="event-details" class="my-16 md:my-24 p-8 glass-card fade-in-up">
+            <h3 class="text-center text-3xl font-bold mb-8 text-pink-800">ព័ត៌មានលម្អិតនៃពិធី</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center text-gray-800">
+                <!-- Content not changed -->
+                <div class="p-4 bg-white/30 rounded-lg">
+                    <span class="text-4xl mb-2 block">📅</span>
+                    <p class="text-xl font-semibold text-pink-700">ថ្ងៃ ខែ ឆ្នាំ</p>
+                    <p class="text-2xl font-bold mt-1">ថ្ងៃអាទិត្យ ទី ០៩ វិច្ឆិកា ២០២៦</p>
+                </div>
+                <div class="p-4 bg-white/30 rounded-lg">
+                    <span class="text-4xl mb-2 block">🕒</span>
+                    <p class="text-xl font-semibold text-pink-700">ម៉ោងចាប់ផ្តើម</p>
+                    <p class="text-2xl font-bold mt-1">ម៉ោង ១១:០០ ព្រឹក</p>
+                </div>
+                <div class="p-4 bg-white/30 rounded-lg">
+                    <span class="text-4xl mb-2 block">📍</span>
+                    <p class="text-xl font-semibold text-pink-700">ទីកន្លែង</p>
+                    <p class="text-xl font-bold mt-1">សណ្ឋាគារ ហ្គ្រេន ភ្នំពេញ (Grand Phnom Penh Hotel)</p>
+                    <p class="text-sm mt-1 text-gray-700">ផ្លូវជាតិលេខ ៦A, សង្កាត់ជ្រោយចង្វារ, រាជធានីភ្នំពេញ</p>
+                </div>
+            </div>
+        </section>
+
+        
+        <section id="schedule" class="my-16 md:my-24 p-8 glass-card fade-in-up">
+            <h3 class="text-center text-3xl font-bold mb-8 text-pink-800">ពិធីដែលនឹងប្រព្រឹត្តទៅ</h3>
+            <!-- Content not changed -->
+            <ol class="space-y-6 text-lg text-gray-800">
+                <li class="flex items-start">
+                    <span class="text-2xl text-pink-700 mr-4">☀️</span>
+                    <div>
+                        <strong class="text-xl text-pink-900">ពេលព្រឹក (ម៉ោង ៧:០០)៖</strong> ពិធីបួងសួង និងសោះសូន្យ (តាមប្រពៃណីខ្មែរ)
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-2xl text-pink-700 mr-4">🍴</span>
+                    <div>
+                        <strong class="text-xl text-pink-900">ពេលរសៀល (ម៉ោង ១១:០០)៖</strong> ពិធីកាត់សក់ ពិធីសម្ពោធអាពាហ៍ពិពាហ៍ និងអាហារូបត្ថម្ភ
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-2xl text-pink-700 mr-4">🥂</span>
+                    <div>
+                        <strong class="text-xl text-pink-900">ពេលយប់ (ម៉ោង ៦:០០)៖</strong> អាហារពិធីជប់លៀង តន្ត្រីអបអរសាទរ និងកាត់នំ
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        
+        <section id="gallery" class="my-16 md:my-24">
+            <h3 class="text-center text-3xl font-bold mb-10 text-white drop-shadow-lg">អនុស្សាវរីយ៍របស់យើង</h3>
+            <!-- Photo Gallery will be dynamically rendered by JavaScript based on CONFIG.gallery -->
+            <div id="photo-gallery" class="grid grid-cols-2 gap-6">
+                <!-- Gallery content will be injected here -->
+            </div>
+            <p class="text-center text-white/80 mt-6 text-sm">**ចំណាំ៖ រូបភាពខាងលើអាចធ្វើការផ្លាស់ប្តូរបានដោយអ្នកអភិវឌ្ឍន៍នៅក្នុងវត្ថុ CONFIG**</p>
+        </section>
+
+        
+        <section id="closing-rsvp" class="my-16 md:my-24 p-8 glass-card fade-in-up">
+            <h3 class="text-center text-3xl font-bold mb-6 text-pink-800">ការអញ្ជើញជាកិត្តិយស</h3>
+
+            <p class="text-xl md:text-2xl text-center mb-8 text-gray-700">
+                ដោយមានកិត្តិយសខ្ពង់ខ្ពស់ សូមអញ្ជើញលោក-លោកស្រី
+                ចូលរួមជាអធិបតី និងជាភ្ញៀវកិត្តិយស
+                ក្នុងពិធីអាពាហ៍ពិពាហ៍របស់ពួកយើង
+                ដើម្បីអបអរសាទរគូស្វាមីភរិយាថ្មី និងជួបជុំគ្រួសារទាំងពីរ
+                ឲ្យបានត្រឹមត្រូវតាមប្រពៃណី និងភាពសប្បាយរីករាយ។
+            </p>
+
+            <div class="text-center mt-10">
+                <p class="text-2xl font-bold text-pink-900 mb-4">
+                    សូមអរគុណយ៉ាងជ្រាលជ្រៅ
+                </p>
+                <p class="text-lg text-gray-700">
+                    ពី៖ លោក សុខ រដ្ឋា និង អ្នកស្រី អាន ម៉ាលី <br>
+                    និង លោក សួន វិបុល និង អ្នកស្រី លី ហេង
+                </p>
+            </div>
+        </section>
+
+
+        <!-- ACTION BUTTONS SECTION (Placed at the bottom) -->
+        <section id="action-buttons" class="mt-8 mb-20 md:mb-24 p-4 fade-in-up">
+            <div class="grid-action-buttons max-w-2xl mx-auto">
+                
+                <a href="#event-details" class="glass-btn">
+                    <span>📍</span>
+                    ទីតាំង
+                </a>
+                
+                <a href="#schedule" class="glass-btn">
+                    <span>🗓️</span>
+                    កាលវិភាគ
+                </a>
+                
+                <a href="#closing-rsvp" class="glass-btn">
+                    <span>✉️</span>
+                    បញ្ជាក់ចូលរួម
+                </a>
+                
+                <a id="contact-btn" href="#" target="_blank" class="glass-btn">
+                    <span>📲</span>
+                    ទំនាក់ទំនង
+                </a>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Use a parsed date object for the countdown
+        const weddingDate = new Date(CONFIG.weddingDate).getTime();
+
+        document.getElementById('contact-btn').href = CONFIG.contactLink;
+
+        /**
+         * 1. Guest Name Personalization (UPDATED LOGIC)
+         * - Prioritizes reading from window.location.hash (Fragment Identifier) 
+         * - This is the reliable method for Google Sites iFrames.
+         */
+        function getGuestNameFromURL() {
+            // 1. Check the URL fragment (#) first for Google Sites iFrame compatibility
+            let searchString = window.location.hash.substring(1); // Remove the '#'
+            
+            // 2. If hash is empty, fall back to checking standard query parameters (?) for local testing
+            if (!searchString) {
+                searchString = window.location.search.substring(1); // Remove the '?'
+            }
+            
+            // Note: If both # and ? are used, this will prioritize the one found in the hash.
+            
+            const params = new URLSearchParams(searchString);
+            let guestName = params.get('to'); 
+            
+            if (guestName) {
+                // Allows using underscore (_) in the URL, replacing it with a space ( )
+                guestName = decodeURIComponent(guestName.replace(/_/g, ' '));
+                return guestName;
+            }
+            return 'លោក-លោកស្រី';
+        }
+
+        function personalizeCoverPage() {
+            const guestNameDisplay = document.getElementById('guest-name-display');
+            if (guestNameDisplay) {
+                guestNameDisplay.textContent = getGuestNameFromURL();
+            }
+        }
+        personalizeCoverPage();
+
+        /**
+         * 2. Countdown Logic (unchanged logic)
+         */
+        function toKhmerNumber(num) {
+            const khmerNumerals = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
+            return String(num).split('').map(digit => {
+                if (digit >= '0' && digit <= '9') {
+                    return khmerNumerals[parseInt(digit, 10)];
+                }
+                return digit;
+            }).join('');
+        }
+
+        function createCountdownUnit(value, label) {
+            return `
+                <div class="bg-white/40 glass-card p-3 md:p-4 rounded-xl flex-1 min-w-[70px] shadow-lg">
+                    <div class="text-3xl md:text-4xl font-extrabold text-pink-900 khmer-number">${value}</div>
+                    <div class="text-sm md:text-lg text-gray-700 mt-1">${label}</div>
+                </div>
+            `;
+        }
+        
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+            const countdownEl = document.getElementById('countdown');
+
+            if (distance < 0) {
+                countdownEl.innerHTML = '<p class="text-3xl text-red-600 font-bold">🎉 ពិធីបានប្រព្រឹត្តទៅហើយ! សូមអបអរសាទរ! 🎉</p>';
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const km_days = toKhmerNumber(days);
+            const km_hours = toKhmerNumber(hours);
+            const km_minutes = toKhmerNumber(minutes);
+            const km_seconds = toKhmerNumber(seconds);
+
+            countdownEl.innerHTML = `
+                ${createCountdownUnit(km_days, 'ថ្ងៃ')}
+                ${createCountdownUnit(km_hours, 'ម៉ោង')}
+                ${createCountdownUnit(km_minutes, 'នាទី')}
+                ${createCountdownUnit(km_seconds, 'វិនាទី')}
+            `;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+
+        /**
+         * 3. Gallery Rendering (New Logic using CONFIG)
+         */
+        function renderGallery() {
+            const galleryEl = document.getElementById('photo-gallery');
+            let html = '';
+            CONFIG.gallery.forEach((photo, index) => {
+                // Using data-delay for staggered fade-in animation
+                const delay = (index + 1) * 100; 
+                html += `
+                    <div class="photo-section fade-in-up ${photo.layout}" 
+                         data-delay="${delay}" 
+                         style="background-image: url('${photo.url}');">
+                    </div>
+                `;
+            });
+            galleryEl.innerHTML = html;
+        }
+
+        renderGallery(); // Render gallery immediately
+
+
+        /**
+         * 4. Cover Page and Animation Logic
+         */
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = entry.target;
+                    const delay = target.getAttribute('data-delay') || 0;
+                    
+                    setTimeout(() => {
+                        target.classList.add('active');
+                        observer.unobserve(target); 
+                    }, parseInt(delay));
+                }
+            });
+        }, observerOptions);
+
+        const coverPage = document.getElementById('cover-page');
+        const openBtn = document.getElementById('open-invitation-btn');
+        const mainContent = document.querySelector('.main-content');
+        const body = document.body;
+
+        const handleIntersection = () => {
+             document.querySelectorAll('.fade-in-up').forEach(element => {
+                observer.observe(element);
+            });
+        };
+
+        openBtn.addEventListener('click', () => {
+            coverPage.classList.add('hidden');
+            body.classList.remove('locked');
+
+            setTimeout(() => {
+                coverPage.style.display = 'none';
+                mainContent.style.display = 'block';
+                handleIntersection(); // Start animations for the main content
+            }, 1000);
+        });
+
+    </script>
+</body>
+</html>
